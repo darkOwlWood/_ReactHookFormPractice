@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-import Theme from './Theme.ts';
+import Theme from './Utils/Theme.ts';
 import '@fontsource-variable/plus-jakarta-sans';
 import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
