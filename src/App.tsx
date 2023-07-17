@@ -14,8 +14,8 @@ import {
     Typography,
 } from '@mui/material';
 import {
-
-} from '@mui/icons-material';
+    pink,
+} from '@mui/material/colors';
 import {
     Control,
     useForm,
@@ -28,6 +28,7 @@ import {
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import hexagonPattern from './assets/hexagon-pattern.svg';
+import hexagonPatternSoft from './assets/hexagon-pattern-soft.svg';
 import memphis from './assets/corporate-memphis.webp';
 import waveHaikei from './assets/wave-haikei.svg';
 import dayjs, { Dayjs } from 'dayjs';
@@ -96,10 +97,19 @@ const TextFieldController = (props: TextFieldControllerProps) => {
                     variant="filled"
                     helperText={!!fieldState.error && fieldState.error?.message}
                     error={!!fieldState.error}
-                    sx={{
+                    sx={theme => ({
                         width: '100%',
+                        marginTop: {
+                            xs: '15px',
+                            md: '25px',
+                        },
+                        '& .MuiFilledInput-root': {
+                            [theme.breakpoints.down('md')]: {
+                                backgroundColor: '#FFF',
+                            }
+                        },
                         ...sx,
-                    }}
+                    })}
                 />
             )}
         />
@@ -116,8 +126,8 @@ const App = () => {
         lastName: alphabetic,
         email: z.string().email(),
         street: z.string().nonempty().max(100),
-        extNumber: z.coerce.number().int().min(1).max(999999),
-        zipCode: z.string(),
+        extNumber: z.coerce.number().int().min(1, 'Invalid No.').max(999999, 'Invalid No.'),
+        zipCode: z.string().regex(/^\d{5}$/, 'Invalid code'),
         birthday: dayjsSchema,
         state: stateSchema,
         isDeveloper: z.boolean(),
@@ -154,15 +164,12 @@ const App = () => {
             >
                 <Alert severity="success">The Information was success send!!!</Alert>
             </Snackbar>
-            <Grid
-                container
-            >
+            <Grid container>
                 <Grid
                     item
                     xs={6}
-                    sx={{
-                        height: '100vh',
-                        // backgroundColor: 'teal',
+                    sx={theme => ({
+                        minHeight: '100vh',
                         backgroundImage: `
                             url(${waveHaikei}),
                             linear-gradient(120deg, #7b6ceb 0%, #a46dd5af 42%, #e473a40f 100%),
@@ -175,7 +182,11 @@ const App = () => {
                         backgroundSize: 'cover',
                         backgroundPosition: '90% center, 0 0, 0 0',
                         backgroundRepeat: 'no-repeat',
-                    }}
+
+                        [theme.breakpoints.down('md')]: {
+                            display: 'none',
+                        }
+                    })}
                 >
                     <Stack
                         sx={{
@@ -184,7 +195,11 @@ const App = () => {
                         alignItems="center"
                         justifyContent="space-around"
                     >
-                        <Stack>
+                        <Stack
+                            sx={{
+                                paddingLeft: '20px'
+                            }}
+                        >
                             <Typography
                                 variant="h3"
                                 sx={{
@@ -199,7 +214,10 @@ const App = () => {
                             <Typography
                                 sx={{
                                     color: '#FFF',
-                                    maxWidth: '450px',
+                                    maxWidth: {
+                                        md: '330px',
+                                        xl: '450px',
+                                    },
                                     marginTop: '20px',
                                 }}
                             >
@@ -217,7 +235,18 @@ const App = () => {
                 </Grid>
                 <Grid
                     item
-                    xs={6}
+                    xs={12}
+                    md={6}
+                    sx={{
+                        backgroundColor: {
+                            xs: pink[50],
+                            md: '#FFF'
+                        },
+                        backgroundImage: {
+                            xs: `url(${hexagonPatternSoft})`,
+                            md: 'none',
+                        },
+                    }}
                 >
                     <Stack
                         alignItems='center'
@@ -247,15 +276,17 @@ const App = () => {
                                 alignItems="center"
                                 justifyContent="space-around"
                                 sx={{
-                                    width: '650px',
-                                    height: '650px',
+                                    // width: '650px',
+                                    // height: '650px',
                                     padding: '20px',
                                     boxSizing: 'border-box',
                                     // margin: '10px auto',
                                 }}
                             >
                                 <Stack
-                                    flexDirection="row"
+                                    flexDirection={{
+                                        md: 'row'
+                                    }}
                                     sx={{
                                         width: '100%',
                                         justifyContent: 'space-between',
@@ -279,7 +310,9 @@ const App = () => {
                                     control={control}
                                 />
                                 <Stack
-                                    flexDirection="row"
+                                    flexDirection={{
+                                        md: 'row',
+                                    }}
                                     sx={{
                                         width: '100%',
                                         justifyContent: 'space-between',
@@ -289,20 +322,36 @@ const App = () => {
                                         name="street"
                                         label="Street"
                                         control={control}
-                                        sx={{ marginRight: '20px' }}
+                                        sx={{
+                                            marginRight: '20px',
+                                            minWidth: '170px'
+                                        }}
                                     />
-                                    <TextFieldController
-                                        label="Number"
-                                        name="extNumber"
-                                        control={control}
-                                        sx={{ width: '250px', marginRight: '20px' }}
-                                    />
-                                    <TextFieldController
-                                        name="zipCode"
-                                        label="Zip Code"
-                                        control={control}
-                                        sx={{ width: '250px' }}
-                                    />
+                                    <Stack flexDirection="row" justifyContent="space-between">
+                                        <TextFieldController
+                                            label="Number"
+                                            name="extNumber"
+                                            control={control}
+                                            sx={{
+                                                marginRight: '20px',
+                                                width: {
+                                                    xs: '130px',
+                                                    md: '100px',
+                                                }
+                                            }}
+                                        />
+                                        <TextFieldController
+                                            name="zipCode"
+                                            label="Zip Code"
+                                            control={control}
+                                            sx={{
+                                                width: {
+                                                    xs: '130px',
+                                                    md: '100px',
+                                                },
+                                            }}
+                                        />
+                                    </Stack>
                                 </Stack>
                                 <Controller
                                     name="birthday"
@@ -320,6 +369,13 @@ const App = () => {
                                                 }
                                             }}
                                             sx={{
+                                                marginTop: {
+                                                    xs: '15px',
+                                                    md: '25px',
+                                                },
+                                                '& .MuiInputBase-root': {
+                                                    backgroundColor: '#FFF',
+                                                },
                                                 alignSelf: 'center',
                                             }}
                                         />
@@ -332,8 +388,23 @@ const App = () => {
                                         <Autocomplete
                                             {...field}
                                             options={StateList}
-                                            sx={{ width: '300px' }}
-                                            renderInput={params => <TextField {...params} label="State" />}
+                                            sx={{
+                                                width: '300px',
+                                                marginTop: {
+                                                    xs: '15px',
+                                                    md: '25px',
+                                                },
+                                                '& .MuiInputBase-root': {
+                                                    backgroundColor: '#FFF',
+                                                },
+                                            }}
+                                            renderInput={params =>
+                                                <TextField
+                                                    {...params}
+                                                    label="State"
+                                                    error={!!fieldState.error}
+                                                    helperText={!!fieldState.error && fieldState.error?.message}
+                                                />}
                                             onChange={(event, value) => field.onChange(value as State)}
                                         />
                                     )}
@@ -344,9 +415,18 @@ const App = () => {
                                     render={({ field, fieldState }) => (
                                         <FormControlLabel
                                             value="isDeveloper"
-                                            label="Are you a developer?"
                                             labelPlacement="start"
+                                            label="Are you a developer?"
                                             control={<Checkbox {...field} checked={field.value} />}
+                                            sx={{
+                                                marginTop: {
+                                                    xs: '15px',
+                                                    md: '25px',
+                                                },
+                                                '& .MuiFilledInput-root': {
+                                                    backgroundColor: '#FFF',
+                                                },
+                                            }}
                                         />
                                     )}
                                 />
@@ -356,6 +436,10 @@ const App = () => {
                                     disabled={isSubmitting}
                                     sx={{
                                         width: '200px',
+                                        marginTop: {
+                                            xs: '15px',
+                                            md: '25px',
+                                        },
                                         fontWeight: 'bold',
                                         alignSelf: 'center',
                                         background: 'linear-gradient(120deg, #7b6ceb 0%, #a46dd5 42%, #e473a4 100%)',
