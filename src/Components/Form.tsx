@@ -1,30 +1,24 @@
 import {
     Alert,
     Stack,
-    Slider,
     Button,
     Snackbar,
-    Checkbox,
-    TextField,
-    Autocomplete,
-    FormControlLabel,
-    Typography,
 } from '@mui/material';
 import {
     useForm,
-    Controller,
     SubmitHandler,
 } from 'react-hook-form';
+import SliderController from './SliderController';
 import TextFieldController from './TextFieldController';
-import { DatePicker, } from '@mui/x-date-pickers';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { StateList, State } from '../Utils/States';
 import dayjs, { Dayjs } from 'dayjs';
-import { StateList } from '../Utils/States';
 import { useState } from 'react';
 import Styles from '../Styles';
 import z from 'zod';
-
-type State = (typeof StateList)[number];
+import DateController from './DateController';
+import ComboBoxController from './ComboBoxController';
+import CheckBoxController from './CheckBoxController';
 
 const dayjsSchema = z.custom<Dayjs>(val => dayjs.isDayjs(val), "This is not a valid date");
 
@@ -60,25 +54,6 @@ const defaultValues: IForm = {
     isDeveloper: false,
     experience: 0,
 };
-
-const marks = [
-    {
-        value: 0,
-        label: 'trainee',
-    },
-    {
-        value: 3,
-        label: 'junior',
-    },
-    {
-        value: 7,
-        label: 'semi senior',
-    },
-    {
-        value: 10,
-        label: 'senior',
-    },
-];
 
 const Form = () => {
 
@@ -190,80 +165,12 @@ const Form = () => {
                             />
                         </Stack>
                     </Stack>
-                    <Controller
-                        name="birthday"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                {...field}
-                                label="Birthday"
-                                format="DD/MM/YYYY"
-                                onChange={value => field.onChange(value as Dayjs)}
-                                slotProps={{
-                                    textField: {
-                                        // size: 'small',
-                                        error: !!fieldState.error,
-                                        helperText: !!fieldState.error && fieldState.error?.message
-                                    }
-                                }}
-                                sx={Styles.Form.datePicker}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="state"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                            <Autocomplete
-                                {...field}
-                                options={StateList}
-                                renderInput={params =>
-                                    <TextField
-                                        {...params}
-                                        // size="small"
-                                        label="State"
-                                        error={!!fieldState.error}
-                                        helperText={!!fieldState.error && fieldState.error?.message}
-                                    />}
-                                onChange={(event, value) => field.onChange(value as State)}
-                                sx={Styles.Form.comboBox}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="isDeveloper"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                            <FormControlLabel
-                                value="isDeveloper"
-                                labelPlacement="start"
-                                label="Are you a developer?"
-                                control={<Checkbox {...field} checked={field.value} />}
-                                sx={Styles.Form.checkBox}
-                            />
-                        )}
-                    />
+                    <DateController control={control} label="Birthday" />
+                    <ComboBoxController control={control} label="State" />
+                    <CheckBoxController control={control} label="Are you a developer?" />
                     {
                         isDeveloper ?
-                            <Stack
-                                alignItems="center"
-                                sx={Styles.Form.wrapperSlider}
-                            >
-                                <Typography>Experience:</Typography>
-                                <Controller
-                                    name="experience"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Slider
-                                            {...field}
-                                            max={10}
-                                            marks={marks}
-                                            sx={Styles.Form.slider}
-                                            onChange={(event: Event, value: number | number[]) => field.onChange(value as number)}
-                                        />
-                                    )}
-                                />
-                            </Stack>
+                            <SliderController label="Experience" control={control} />
                             : null
                     }
                     <Button

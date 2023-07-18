@@ -49,3 +49,5 @@ export const StateList = [
     , "West Virginia"
     , "Wisconsin"
     , "Wyoming"] as const;
+
+  export type State = (typeof StateList)[number];
