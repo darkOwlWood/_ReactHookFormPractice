@@ -35,6 +35,7 @@ const TextFieldController = (props: TextFieldControllerProps) => {
                     {...field}
                     label={label}
                     variant="filled"
+                    size="small"
                     helperText={!!fieldState.error && fieldState.error?.message}
                     error={!!fieldState.error}
                     sx={Styles.TextFieldController(sx as CSSProperties)}

@@ -1,12 +1,14 @@
 import {
     Alert,
     Stack,
+    Slider,
     Button,
     Snackbar,
     Checkbox,
     TextField,
     Autocomplete,
     FormControlLabel,
+    Typography,
 } from '@mui/material';
 import {
     useForm,
@@ -43,6 +45,7 @@ export interface IForm {
     birthday: Dayjs;
     state: State;
     isDeveloper: boolean;
+    experience: number;
 }
 
 const defaultValues: IForm = {
@@ -55,7 +58,27 @@ const defaultValues: IForm = {
     birthday: dayjs(),
     state: StateList[0],
     isDeveloper: false,
+    experience: 0,
 };
+
+const marks = [
+    {
+        value: 0,
+        label: 'trainee',
+    },
+    {
+        value: 3,
+        label: 'junior',
+    },
+    {
+        value: 7,
+        label: 'semi senior',
+    },
+    {
+        value: 10,
+        label: 'senior',
+    },
+];
 
 const Form = () => {
 
@@ -72,10 +95,12 @@ const Form = () => {
         birthday: dayjsSchema,
         state: stateSchema,
         isDeveloper: z.boolean(),
+        experience: z.number().int(),
     }).required());
 
     const {
         reset,
+        watch,
         control,
         handleSubmit,
         formState: { isSubmitting },
@@ -83,6 +108,8 @@ const Form = () => {
         defaultValues,
         resolver
     });
+
+    const isDeveloper = watch('isDeveloper');
 
     const onSubmit: SubmitHandler<IForm> = async data => {
         return new Promise((resolve, reject) => {
@@ -174,6 +201,7 @@ const Form = () => {
                                 onChange={value => field.onChange(value as Dayjs)}
                                 slotProps={{
                                     textField: {
+                                        // size: 'small',
                                         error: !!fieldState.error,
                                         helperText: !!fieldState.error && fieldState.error?.message
                                     }
@@ -192,6 +220,7 @@ const Form = () => {
                                 renderInput={params =>
                                     <TextField
                                         {...params}
+                                        // size="small"
                                         label="State"
                                         error={!!fieldState.error}
                                         helperText={!!fieldState.error && fieldState.error?.message}
@@ -214,6 +243,29 @@ const Form = () => {
                             />
                         )}
                     />
+                    {
+                        isDeveloper ?
+                            <Stack
+                                alignItems="center"
+                                sx={Styles.Form.wrapperSlider}
+                            >
+                                <Typography>Experience:</Typography>
+                                <Controller
+                                    name="experience"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Slider
+                                            {...field}
+                                            max={10}
+                                            marks={marks}
+                                            sx={Styles.Form.slider}
+                                            onChange={(event: Event, value: number | number[]) => field.onChange(value as number)}
+                                        />
+                                    )}
+                                />
+                            </Stack>
+                            : null
+                    }
                     <Button
                         type="submit"
                         variant="contained"

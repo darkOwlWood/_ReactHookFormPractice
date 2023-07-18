@@ -5,8 +5,16 @@ import {
 import { pink } from '@mui/material/colors'
 import hexagonPatternSoft from './assets/hexagon-pattern-soft.svg';
 import hexagonPattern from './assets/hexagon-pattern.svg';
+import layeredWavesHaikei from './assets/layered-waves-haikei.svg';
 import waveHaikei from './assets/wave-haikei.svg';
 import { CSSProperties } from 'react';
+
+const defaultFormComponents: SxProps = {
+    marginTop: {
+        xs: '15px',
+        md: '25px',
+    }
+};
 
 export default {
     App: {
@@ -28,23 +36,35 @@ export default {
             },
         })) as SxProps,
 
-        form: {
-            backgroundColor: {
-                xs: pink[50],
-                md: '#FFF'
+        form: ((theme: Theme) => ({
+            aspectRatio: '960/600',
+            [theme.breakpoints.up('xs')]: {
+                // minHeight: '100vh',
+                minHeight: '770px',
+                backgroundColor: pink[50],
+                backgroundImage: `  
+                    url(${layeredWavesHaikei}),
+                    linear-gradient(120deg, ${pink[50]} 0%, transparent 100%),
+                    url(${hexagonPatternSoft}),
+                    linear-gradient(120deg, ${pink[50]} 0%, #e473a40f 100%)
+                    `,
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat, repeat',
             },
-            backgroundImage: {
-                xs: `url(${hexagonPatternSoft})`,
-                md: 'none',
+            [theme.breakpoints.up('md')]: {
+                height: 'auto',
+                minHeight: 'auto',
+                backgroundColor: '#FFF',
+                backgroundImage: 'none',
             },
-        } as SxProps,
+        })) as SxProps,
 
         heroWrapper: {
             height: '100%',
         } as SxProps,
 
         heroInfoWrapper: {
-            paddingLeft: '20px'
+            paddingLeft: '15px'
         } as SxProps,
 
         heroInfoTitle: {
@@ -67,24 +87,24 @@ export default {
             width: '300px',
         } as CSSProperties,
 
-        formTitle: {
-            marginTop: '40px',
+        formTitle: ((theme: Theme) => ({
+            marginTop: '30px',
             fontWeight: 'bold',
             fontFamily: 'Plus Jakarta Sans Variable',
-            background: 'linear-gradient(120deg, #7b6ceb 0%, #a46dd5 42%, #e473a4 100%)',
-            color: 'transparent',
-            backgroundClip: 'text',
-        } as SxProps,
+            color: '#FFF',
+            [theme.breakpoints.up('md')]: {
+                background: 'linear-gradient(120deg, #7b6ceb 0%, #a46dd5 42%, #e473a4 100%)',
+                color: 'transparent',
+                backgroundClip: 'text',
+            },
+        })) as SxProps,
     },
 
     TextFieldController: (sx: CSSProperties) =>
         ((theme: Theme) => ({
+            ...defaultFormComponents,
             width: '100%',
-            marginTop: {
-                xs: '15px',
-                md: '25px',
-            },
-            '& .MuiFilledInput-root': {
+            '& .MuiFilledInput-root, & .MuiFilledInput-root:hover, & .MuiFilledInput-root.Mui-focused': {
                 [theme.breakpoints.down('md')]: {
                     backgroundColor: '#FFF',
                 }
@@ -94,7 +114,7 @@ export default {
 
     Form: {
         wrapper: {
-            padding: '20px',
+            padding: '10px 15px 20px',
             boxSizing: 'border-box',
         } as SxProps,
 
@@ -133,10 +153,7 @@ export default {
         } as SxProps,
 
         datePicker: {
-            marginTop: {
-                xs: '15px',
-                md: '25px',
-            },
+            ...defaultFormComponents,
             '& .MuiInputBase-root': {
                 backgroundColor: '#FFF',
             },
@@ -144,35 +161,37 @@ export default {
         } as SxProps,
 
         comboBox: {
+            ...defaultFormComponents,
             width: '300px',
-            marginTop: {
-                xs: '15px',
-                md: '25px',
-            },
             '& .MuiInputBase-root': {
                 backgroundColor: '#FFF',
             },
         } as SxProps,
 
         checkBox: {
-            marginTop: {
-                xs: '15px',
-                md: '25px',
-            },
+            ...defaultFormComponents,
             '& .MuiFilledInput-root': {
                 backgroundColor: '#FFF',
             },
         } as SxProps,
 
         button: {
+            ...defaultFormComponents,
             width: '200px',
+            fontWeight: 'bold',
+            alignSelf: 'center',
+            background: 'linear-gradient(120deg, #7b6ceb 0%, #a46dd5 42%, #e473a4 100%)',
+        } as SxProps,
+
+        wrapperSlider: {
             marginTop: {
                 xs: '15px',
                 md: '25px',
             },
-            fontWeight: 'bold',
-            alignSelf: 'center',
-            background: 'linear-gradient(120deg, #7b6ceb 0%, #a46dd5 42%, #e473a4 100%)',
+        } as SxProps,
+
+        slider: {
+            width: '300px',
         } as SxProps,
     },
 } as const;
